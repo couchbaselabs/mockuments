@@ -20,11 +20,27 @@ modify that dataset at a future point).
 Hopefully this tool should be useful to TSEs, SEs as well as any users of
 Couchbase wishing to easily randomly generate a dataset.
 
+Disclaimer: Unfortunately in its current incarnation it is very slow when creating large datasets, so I would not recommend doing so for the time being, this will be improved over time.
+
 ## Usage
 `python mockuments.py [file_name]`
 
 The full list of commands be found by typing
 `python mockuments.py -h`
+
+### Templates
+Templates are specified in JSON format, an example can be seen here:
+```
+{"Single Field": {"length": 40, "type": "string"}}
+```
+
+Currently the accepted data types are:
+`"string"` - String
+`"datetime"` - Datetime
+`"int"` - Integer
+`"float"` - Float
+
+All fields also must have a length supplied, this is likely to change in future though.
 
 ## Roadmap
 - Allow for document referencing (document keys within other documents)
@@ -37,3 +53,4 @@ required to generate the documents is calculated
 - Allow the user to specify custom bounds for generated ints + floats (this is
 actually far more sensible than using length)
 - Allow user to specify template using a REPL rather than a json file
+- Allow user to specify if they want a field's value to be a random length within bounds.
