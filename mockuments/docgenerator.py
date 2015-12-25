@@ -7,15 +7,13 @@ import uuid
 class DocGenerator(object):
     def __init__(self, template):
         self.template = template
-        self.DATA_TYPE_MAPPING = {
-                                  'datetime': (self.generate_random_date,
-                                               False),
-                                  'string': (self.generate_random_string,
-                                             True),
-                                  'int': (self.generate_random_int, True),
-                                  'float': (self.generate_random_float, True),
-                                  'bool': (self.generate_random_bool, False),
-                                  }
+        self.DATA_TYPE_MAPPING = dict(datetime=(self.generate_random_date,
+                                                False),
+                                      string=(self.generate_random_string,
+                                              True),
+                                      int=(self.generate_random_int, True),
+                                      float=(self.generate_random_float, True),
+                                      bool=(self.generate_random_bool, False))
 
     def generate_document(self):
         # The big problem here is that random generation is slow, perhaps look

@@ -6,9 +6,8 @@ class TemplateLoader(object):
     def __init__(self, file_name):
         self.file_name = file_name
         self.template = self._load_from_file()
-        self.ACCEPTABLE_TYPES = {'string': True, 'int': True,
-                                 'datetime': False, 'float': True,
-                                 'bool': False}
+        self.ACCEPTABLE_TYPES = dict(string=True, int=True, datetime=False,
+                                     float=True, bool=False)
         self.ACCEPTABLE_FIELDS = ['type', 'lower_bound', 'upper_bound', ]
         if not self._validate_input():
             print('Exiting due to validation failure, see error messages for '
@@ -47,7 +46,8 @@ class TemplateLoader(object):
                 continue
 
             if 'type' in self.template[field]:
-                need_bounds = self.ACCEPTABLE_TYPES[self.template[field]['type']]
+                need_bounds = self.ACCEPTABLE_TYPES[self.template[field]
+                                                    ['type']]
             else:
                 print(no_type_fmt.format(field))
                 continue
