@@ -33,6 +33,9 @@ class TemplateLoader(object):
                                'converted to an int')
         no_lower_bound_fmt = ('Error - No lower bound value specified for '
                               'field `{}`')
+        invalid_bounds_fmt = ('Error - Lower bound is higher than upper bound '
+                              'for field `{}`')
+
         for field in self.template.iterkeys():
             unexpected_fields = [key for key in self.template[field].iterkeys()
                                  if key not in self.ACCEPTABLE_FIELDS]
@@ -57,8 +60,10 @@ class TemplateLoader(object):
                 continue
 
             if need_bounds:
+                upper_bound = None
+                lower_bound = None
                 try:
-                    int(self.template[field]['upper_bound'])
+                    upper_bound = int(self.template[field]['upper_bound'])
                 except ValueError:
                     print(upper_bound_int_fmt.format(field))
                     valid = False
@@ -67,11 +72,16 @@ class TemplateLoader(object):
                     valid = False
 
                 try:
-                    int(self.template[field]['lower_bound'])
+                    lower_bound = int(self.template[field]['lower_bound'])
                 except ValueError:
                     print(lower_bound_int_fmt.format(field))
                     valid = False
                 except KeyError:
                     print(no_lower_bound_fmt.format(field))
+                    valid = False
+
+                if upper_bound and lower_bound and upper_bound < lower_bound:
+                    print(invalid_bounds_fmt.format(field))
+                    valid = False
 
         return valid
