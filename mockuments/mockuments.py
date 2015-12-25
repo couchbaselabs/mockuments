@@ -72,13 +72,13 @@ def parse_arguments(arguments):
                                      'generate random datasets which are of a'
                                      ' particular format and store them in'
                                      ' Couchbase Server')
-    parser.add_argument('template', nargs=1, help='Path to your template '
-                                                  'JSON document')
+    parser.add_argument('template', type=str,
+                        help='Path to your template JSON document')
     parser.add_argument('--number_of_docs', '-n', type=int, default=1000,
                         help='Number of documents to generate')
-    parser.add_argument('--host', default='localhost',
+    parser.add_argument('--host', default='localhost', type=str,
                         help='IP/Hostname of your Couchbase Server instance')
-    parser.add_argument('--bucket', '-b', default='default',
+    parser.add_argument('--bucket', '-b', default='default', type=str,
                         help='Name of the Couchbase bucket in which to store'
                         ' the data')
     global args
