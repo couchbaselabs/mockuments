@@ -14,5 +14,9 @@
   "date_example": {
     "type": "datetime",
     "length": 0
+  },
+  "bool_example": {
+    "type": "bool",
+    "length": 0
   }
 }

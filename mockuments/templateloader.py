@@ -6,7 +6,7 @@ class TemplateLoader(object):
     def __init__(self, file_name):
         self.file_name = file_name
         self.template = self._load_from_file()
-        self.ACCEPTABLE_TYPES = ['string', 'int', 'datetime', 'float']
+        self.ACCEPTABLE_TYPES = ['string', 'int', 'datetime', 'float', 'bool']
         self.ACCEPTABLE_FIELDS = ['type', 'length']
         if not self._validate_input():
             print('Exiting due to validation failure, see error messages for '

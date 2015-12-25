@@ -7,10 +7,13 @@ import uuid
 class DocGenerator(object):
     def __init__(self, template):
         self.template = template
-        self.DATA_TYPE_MAPPING = {'datetime': self.generate_random_date,
+        self.DATA_TYPE_MAPPING = {
+                                  'datetime': self.generate_random_date,
                                   'string': self.generate_random_string,
                                   'int': self.generate_random_int,
-                                  'float': self.generate_random_float}
+                                  'float': self.generate_random_float,
+                                  'bool': self.generate_random_bool,
+                                  }
         self.DEFAULT_LENGTH = 32
 
     def generate_document(self):
@@ -49,4 +52,9 @@ class DocGenerator(object):
         # FIXME: Floats become truncated, bounds would be more sensible than
         # lengths
         value = random.random() * pow(10, length)
+        return value
+
+    @staticmethod
+    def generate_random_bool(_):
+        value = random.choice([True, False])
         return value
