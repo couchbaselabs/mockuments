@@ -15,14 +15,32 @@ class TemplateLoader(object):
             exit(1)
 
     def _load_from_file(self):
-        return json.load(open(self.file_name, 'r'))
+
+        def dict_raise_on_duplicates(ordered_pairs):
+            """Reject duplicate keys."""
+            d = {}
+            for k, v in ordered_pairs:
+                if k in d:
+                    raise ValueError("duplicate key: %r" % (k,))
+                else:
+                    d[k] = v
+            return d
+
+        try:
+            loaded_dict = json.load(open(self.file_name, 'r'),
+                                    object_pairs_hook=dict_raise_on_duplicates)
+        except ValueError:
+            print("Error - Duplicate keys found in json file, exiting")
+            exit(1)
+        else:
+            return loaded_dict
 
     def _validate_input(self):
         valid = True
         type_error_fmt = ('Error - Unexpected type for field `{}`: Only '
                           '`{}` are accepted')
         unexpected_fields_fmt = ('Error - Unexpected inputs for field `{}`: '
-                                 '`{}`')
+                                 ' only `{}` are valid inputs')
         no_type_fmt = 'Error - No `type` input in template for field `{}`'
         upper_bound_int_fmt = ('Error - Upper bound for field `{}` cannot be '
                                'converted to an int')
@@ -45,19 +63,19 @@ class TemplateLoader(object):
                 valid = False
                 continue
 
-            if 'type' in self.template[field]:
-                need_bounds = self.ACCEPTABLE_TYPES[self.template[field]
-                                                    ['type']]
-            else:
+            try:
+                if self.template[field]['type'] not in self.ACCEPTABLE_TYPES:
+                    print(type_error_fmt.format(
+                        field, ', '.join(self.ACCEPTABLE_TYPES)))
+                    valid = False
+                    continue
+            except KeyError:
                 print(no_type_fmt.format(field))
-                continue
-
-            if self.template[field]['type'] not in self.ACCEPTABLE_TYPES:
-                print(type_error_fmt.format(
-                    self.template[field]['type'], ', '.format(
-                        self.ACCEPTABLE_TYPES)))
                 valid = False
                 continue
+            else:
+                need_bounds = self.ACCEPTABLE_TYPES[self.template[field]
+                                                    ['type']]
 
             if need_bounds:
                 upper_bound = None
