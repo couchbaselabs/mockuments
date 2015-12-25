@@ -1,0 +1,18 @@
+{
+  "string_example": {
+    "type": "string",
+    "length": 20
+  },
+  "float_example": {
+    "type": "float",
+    "length": 6
+  },
+  "int_example": {
+    "type": "int",
+    "length": 6
+  },
+  "date_example": {
+    "type": "datetime",
+    "length": 0
+  }
+}
