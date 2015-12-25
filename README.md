@@ -33,8 +33,31 @@ The full list of commands be found by typing
 #### Templates
 Templates are specified in JSON format, an example can be seen here:
 ```
-{"Single Field": {"length": 40, "type": "string"}}
+{
+  "string_example": {
+    "type": "string",
+    "upper_bound": 20,
+    "lower_bound": 10
+  },
+  "float_example": {
+    "type": "float",
+    "upper_bound": 100000,
+    "lower_bound": 10
+  },
+  "int_example": {
+    "type": "int",
+    "upper_bound": 100000,
+    "lower_bound": 10
+  },
+  "date_example": {
+    "type": "datetime"
+  },
+  "bool_example": {
+    "type": "bool"
+  }
+}
 ```
+This example can also be found (and used) in the `example_template.json` file.
 
 Currently the accepted data types are:
 - `"string"` - String (e.g abcdefg)
@@ -43,8 +66,9 @@ Currently the accepted data types are:
 - `"float"` - Float (e.g 2.245)
 - `"bool"` - Boolean (True/False)
 
-All fields also must have a length supplied, even if they do not require a
-length, this is very likely to change in the near future.
+The fields `string`, `int` and `float` must also have their upper and lower
+bounds supplied, a value will be randomly selected between these bounds (for
+`string` this value is the length of the string).
 
 ## Roadmap
 - Allow for document referencing (document keys within other documents)
@@ -54,8 +78,4 @@ instead
 - Allow the user to specify a sample document and all of the relevant metadata
 required to generate the documents is calculated
 - Allow the user to specify the datetime format, as well as any bounds
-- Allow the user to specify custom bounds for generated ints + floats (this is
-actually far more sensible than using length)
 - Allow user to specify template using a REPL rather than a json file
-- Allow user to specify if they want a field's value to be a random length
-within bounds.

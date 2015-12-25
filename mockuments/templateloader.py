@@ -6,8 +6,10 @@ class TemplateLoader(object):
     def __init__(self, file_name):
         self.file_name = file_name
         self.template = self._load_from_file()
-        self.ACCEPTABLE_TYPES = ['string', 'int', 'datetime', 'float', 'bool']
-        self.ACCEPTABLE_FIELDS = ['type', 'length']
+        self.ACCEPTABLE_TYPES = {'string': True, 'int': True,
+                                 'datetime': False, 'float': True,
+                                 'bool': False}
+        self.ACCEPTABLE_FIELDS = ['type', 'lower_bound', 'upper_bound', ]
         if not self._validate_input():
             print('Exiting due to validation failure, see error messages for '
                   'further information')
@@ -18,38 +20,58 @@ class TemplateLoader(object):
 
     def _validate_input(self):
         valid = True
-        type_error_fmt = ('Error - Unexpected type found: `{}` - Only `{}` are'
-                          ' accepted')
-        not_enough_fields_fmt = ('Error - Not enough fields found, ensure that'
-                                 ' each element has fields `{}`')
-        too_many_fields_fmt = ('Error - Unexpected fields found `{}`, only '
-                               '`{}` are accepted')
-
-        for value in self.template.itervalues():
-            if len(value.keys()) < len(self.ACCEPTABLE_FIELDS):
-                print(not_enough_fields_fmt.format(
+        type_error_fmt = ('Error - Unexpected type for field `{}`: Only '
+                          '`{}` are accepted')
+        unexpected_fields_fmt = ('Error - Unexpected inputs for field `{}`: '
+                                 '`{}`')
+        no_type_fmt = 'Error - No `type` input in template for field `{}`'
+        upper_bound_int_fmt = ('Error - Upper bound for field `{}` cannot be '
+                               'converted to an int')
+        no_upper_bound_fmt = ('Error - No upper bound value specified for '
+                              'field `{}`')
+        lower_bound_int_fmt = ('Error - Lower bound for field `{}` cannot be '
+                               'converted to an int')
+        no_lower_bound_fmt = ('Error - No lower bound value specified for '
+                              'field `{}`')
+        for field in self.template.iterkeys():
+            unexpected_fields = [key for key in self.template[field].iterkeys()
+                                 if key not in self.ACCEPTABLE_FIELDS]
+            if unexpected_fields:
+                print(unexpected_fields_fmt.format(
+                    field,
                     ', '.join(self.ACCEPTABLE_FIELDS)))
                 valid = False
                 continue
 
-            elif len(value.keys()) > len(self.ACCEPTABLE_FIELDS):
-                unexpected_fields = [key for key in value.iterkeys()
-                                     if key not in self.ACCEPTABLE_FIELDS]
-                print(too_many_fields_fmt.format(
-                    ', '.join(unexpected_fields),
-                    ', '.join(self.ACCEPTABLE_FIELDS)))
-                valid = False
+            if 'type' in self.template[field]:
+                need_bounds = self.ACCEPTABLE_TYPES[self.template[field]['type']]
+            else:
+                print(no_type_fmt.format(field))
                 continue
 
-            if value['type'] not in self.ACCEPTABLE_TYPES:
+            if self.template[field]['type'] not in self.ACCEPTABLE_TYPES:
                 print(type_error_fmt.format(
-                    value['type'], ', '.format(self.ACCEPTABLE_TYPES)))
+                    self.template[field]['type'], ', '.format(
+                        self.ACCEPTABLE_TYPES)))
                 valid = False
+                continue
 
-            try:
-                value['length'] = int(value['length'])
-            except Exception:
-                print('Error - Length value cannot be converted to int')
-                valid = False
+            if need_bounds:
+                try:
+                    int(self.template[field]['upper_bound'])
+                except ValueError:
+                    print(upper_bound_int_fmt.format(field))
+                    valid = False
+                except KeyError:
+                    print(no_upper_bound_fmt.format(field))
+                    valid = False
+
+                try:
+                    int(self.template[field]['lower_bound'])
+                except ValueError:
+                    print(lower_bound_int_fmt.format(field))
+                    valid = False
+                except KeyError:
+                    print(no_lower_bound_fmt.format(field))
 
         return valid

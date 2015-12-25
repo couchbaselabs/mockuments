@@ -1,22 +1,23 @@
 {
   "string_example": {
     "type": "string",
-    "length": 20
+    "upper_bound": 20,
+    "lower_bound": 10
   },
   "float_example": {
     "type": "float",
-    "length": 6
+    "upper_bound": 100000,
+    "lower_bound": 10
   },
   "int_example": {
     "type": "int",
-    "length": 6
+    "upper_bound": 100000,
+    "lower_bound": 10
   },
   "date_example": {
-    "type": "datetime",
-    "length": 0
+    "type": "datetime"
   },
   "bool_example": {
-    "type": "bool",
-    "length": 0
+    "type": "bool"
   }
 }
