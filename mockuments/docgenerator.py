@@ -34,8 +34,7 @@ class DocGenerator(object):
         year = random.randint(1900, datetime.datetime.now().year)
         month = random.randint(1, 12)
         day = random.randint(1, 28)
-        datetime_fmt = '%m/%d/%Y'
-        return datetime.datetime(year, month, day).strftime(datetime_fmt)
+        return ''.join([datetime.datetime(year, month, day).isoformat(),'Z'])
 
     @staticmethod
     def generate_random_string(length):

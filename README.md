@@ -38,7 +38,7 @@ Templates are specified in JSON format, an example can be seen here:
 
 Currently the accepted data types are:
 - `"string"` - String (e.g abcdefg)
-- `"datetime"` - Datetime (e.g 01/01/1970)
+- `"datetime"` - Datetime (e.g 1915-05-12T00:00:00Z)
 - `"int"` - Integer (e.g 42)
 - `"float"` - Float (e.g 2.245)
 - `"bool"` - Boolean (True/False)
